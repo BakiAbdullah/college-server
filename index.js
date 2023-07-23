@@ -7,8 +7,13 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// middleware
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -28,6 +33,7 @@ async function run() {
   try {
     // My database collections
     const usersCollection = client.db("CollegeDB").collection("users");
+    const collegeCollection = client.db("CollegeDB").collection("collegesData");
 
     //TODO: Users Related API Starts
 
@@ -65,6 +71,22 @@ async function run() {
     });
 
     //TODO: Users Related API ENDS
+
+    // << Class Related Routes Starts >>>
+    app.get("/allcolleges", async (req, res) => {
+      const limit = parseInt(req.query.limit) || 0;
+      let query = {};
+      const options = {
+        sort: { collegeRating: -1 },
+      };
+      const result = await collegeCollection
+        .find(query, options)
+        .limit(limit)
+        .toArray();
+      res.send(result);
+    });
+
+    // << Class Related Routes Ends >>>
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
