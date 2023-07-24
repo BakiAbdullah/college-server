@@ -77,7 +77,7 @@ async function run() {
       const limit = parseInt(req.query.limit) || 0;
       let query = {};
       const options = {
-        sort: { collegeRating: -1 },
+        sort: { collegeRating: 1 },
       };
       const result = await collegeCollection
         .find(query, options)
@@ -93,17 +93,17 @@ async function run() {
       res.send(result);
     });
 
-     //TODO: Search College by College name
-    // app.get("/searchCollege/:text", async (req, res) => {
-    //   const queryText = req.params.text;
-    //   if (!queryText) {
-    //     return res.status(400).json({ error: "Query text is required" });
-    //   }
-    //   const result = await collegeCollection
-    //     .find({ collegeName: { $regex: queryText, $options: "i" } })
-    //     .toArray();
-    //   res.send(result);
-    // });
+     // Search College by College name
+    app.get("/searchCollege/:text", async (req, res) => {
+      const queryText = req.params.text;
+      if (!queryText) {
+        return res.status(400).json({ error: "Query text is required" });
+      }
+      const result = await collegeCollection
+        .find({ collegeName: { $regex: queryText, $options: "i" } })
+        .toArray();
+      res.send(result);
+    });
 
 
     // << Class Related Routes Ends >>>
