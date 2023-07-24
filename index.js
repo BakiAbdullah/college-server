@@ -77,7 +77,7 @@ async function run() {
       const limit = parseInt(req.query.limit) || 0;
       let query = {};
       const options = {
-        sort: { collegeRating: 1 },
+        sort: { collegeRating: -1 },
       };
       const result = await collegeCollection
         .find(query, options)
